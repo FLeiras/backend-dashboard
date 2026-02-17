@@ -6,7 +6,6 @@ datasource db {
   provider = "sqlite"
 }
 
-
 model User {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -18,10 +17,9 @@ model User {
 }
 
 model Category {
-  id     Int    @id @default(autoincrement())
-  key    String @unique
-  nameEn String
-  nameEs String
+  id       Int       @id @default(autoincrement())
+  nameEn   String
+  nameEs   String
   products Product[]
 }
 
@@ -33,7 +31,6 @@ model Product {
   image       String
   categoryId  Int
   category    Category @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime @default(now())
 }
 
 enum Role {
