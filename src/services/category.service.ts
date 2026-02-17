@@ -1,5 +1,14 @@
 import { prisma } from '../lib/prisma';
 
+interface UpdateCategoryDTO {
+  nameEn?: string;
+  nameEs?: string;
+}
+
+export const getCategories = async () => {
+  return prisma.category.findMany();
+};
+
 export const createCategory = async ({
   nameEn,
   nameEs,
@@ -15,6 +24,23 @@ export const createCategory = async ({
   });
 };
 
-export const getCategories = async () => {
-  return prisma.category.findMany();
+export const updateCategory = async (id: number, data: UpdateCategoryDTO) => {
+  return prisma.category.update({
+    where: { id },
+    data,
+  });
+};
+
+export const deleteCategory = async (id: number) => {
+  const productsCount = await prisma.product.count({
+    where: { categoryId: id },
+  });
+
+  if (productsCount > 0) {
+    throw new Error('Category has products');
+  }
+
+  return prisma.category.delete({
+    where: { id },
+  });
 };

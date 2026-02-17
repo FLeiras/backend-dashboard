@@ -8,6 +8,10 @@ type CreateProductDTO = {
   image?: string;
 };
 
+export function findAllProducts() {
+  return prisma.product.findMany();
+}
+
 export async function createProduct(data: CreateProductDTO) {
   if (!data.image) {
     throw new Error('Image is required');
@@ -28,6 +32,23 @@ export async function createProduct(data: CreateProductDTO) {
   });
 }
 
-export function findAllProducts() {
-  return prisma.product.findMany();
+interface UpdateProductDTO {
+  title?: string;
+  description?: string;
+  price?: number;
+  image?: string;
+  categoryId?: number;
 }
+
+export const updateProduct = async (id: number, data: UpdateProductDTO) => {
+  return prisma.product.update({
+    where: { id },
+    data,
+  });
+};
+
+export const deleteProduct = async (id: number) => {
+  return prisma.product.delete({
+    where: { id },
+  });
+};
