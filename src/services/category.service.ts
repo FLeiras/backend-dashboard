@@ -9,8 +9,8 @@ export const createCategory = async ({
 }) => {
   return prisma.category.create({
     data: {
-      nameEn: 'Shoes',
-      nameEs: 'Calzado',
+      nameEn: nameEn,
+      nameEs: nameEs,
     },
   });
 };
