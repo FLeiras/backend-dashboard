@@ -1,30 +1,32 @@
+import slugify from 'slugify';
 import { prisma } from '../lib/prisma';
 
-interface UpdateCategoryDTO {
-  nameEn?: string;
-  nameEs?: string;
-}
+type CreateCategoryDTO = {
+  nameEn: string;
+  nameEs: string;
+};
 
 export const getCategories = async () => {
   return prisma.category.findMany();
 };
 
-export const createCategory = async ({
-  nameEn,
-  nameEs,
-}: {
-  nameEn: string;
-  nameEs: string;
-}) => {
+function generateKey(nameEn: string) {
+  return nameEn.toLowerCase().trim().replace(/\s+/g, '-');
+}
+
+export async function createCategory(data: CreateCategoryDTO) {
+  const key = slugify(data.nameEn, { lower: true });
+
   return prisma.category.create({
     data: {
-      nameEn: nameEn,
-      nameEs: nameEs,
+      key,
+      nameEn: data.nameEn,
+      nameEs: data.nameEs,
     },
   });
-};
+}
 
-export const updateCategory = async (id: number, data: UpdateCategoryDTO) => {
+export const updateCategory = async (id: number, data: CreateCategoryDTO) => {
   return prisma.category.update({
     where: { id },
     data,
