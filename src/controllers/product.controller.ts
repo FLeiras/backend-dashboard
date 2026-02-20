@@ -1,19 +1,27 @@
 import { Request, Response } from 'express';
 import * as productService from '../services/';
 
+const localHostUrl = process.env.LOCAL_HOST_URL;
+
 export async function getProducts(_req: Request, res: Response) {
   const products = await productService.findAllProducts();
   res.json(products);
 }
 
 export async function createProductController(req: Request, res: Response) {
-  try {
-    const product = await productService.createProduct(req.body);
-    res.status(201).json(product);
-  } catch (error) {
-    console.log(error);
-    res.status(400).json({ message: 'Error creating product' });
+  if (!req.file) {
+    return res.status(400).json({ message: 'Image is required' });
   }
+
+  const product = await productService.createProduct({
+    title: req.body.title,
+    description: req.body.description,
+    price: Number(req.body.price),
+    categoryId: Number(req.body.categoryId),
+    image: `${localHostUrl}/uploads/${req.file.filename}`,
+  });
+
+  res.status(201).json(product);
 }
 
 export const updateProductController = async (req: Request, res: Response) => {
