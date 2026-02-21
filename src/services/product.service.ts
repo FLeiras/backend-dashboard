@@ -1,12 +1,5 @@
 import { prisma } from '../lib/prisma';
-
-type CreateProductDTO = {
-  title: string;
-  description: string;
-  price: number;
-  categoryId: number;
-  image?: string;
-};
+import { CreateProductDTO, UpdateProductDTO } from '../types/Products';
 
 export function findAllProducts() {
   return prisma.product.findMany();
@@ -32,13 +25,11 @@ export async function createProduct(data: CreateProductDTO) {
   });
 }
 
-interface UpdateProductDTO {
-  title?: string;
-  description?: string;
-  price?: number;
-  image?: string;
-  categoryId?: number;
-}
+export const getProductById = async (id: number) => {
+  return prisma.product.findUnique({
+    where: { id },
+  });
+};
 
 export const updateProduct = async (id: number, data: UpdateProductDTO) => {
   return prisma.product.update({

@@ -5,6 +5,7 @@ import * as productController from '../controllers/';
 const router = Router();
 
 router.get('/', productController.getProducts);
+router.get('/:id', productController.getProductById);
 router.post(
   '/',
   upload.single('image'),

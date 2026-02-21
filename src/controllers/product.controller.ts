@@ -8,6 +8,25 @@ export async function getProducts(_req: Request, res: Response) {
   res.json(products);
 }
 
+export async function getProductById(req: Request, res: Response) {
+  try {
+    const id = Number(req.params.id);
+
+    if (isNaN(id)) {
+      return res.status(400).json({ message: 'Invalid product id' });
+    }
+
+    const product = await productService.getProductById(id);
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' });
+    }
+
+    res.json(product);
+  } catch (error) {
+    res.status(404).json({ message: 'Product not found' });
+  }
+}
+
 export async function createProductController(req: Request, res: Response) {
   if (!req.file) {
     return res.status(400).json({ message: 'Image is required' });
